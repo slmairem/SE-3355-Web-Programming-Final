@@ -1,0 +1,72 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000; /* Set the background color to black */
+}
+
+.container.mt-3 {
+    padding: 0;
+    max-width: 100%;
+}
+
+.movie-container {
+    background-color: #222222;
+    padding: 10px;
+    border-radius: 10px;
+    height: 500px; /* Adjusted height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #fff;
+    position: relative;
+    margin: 0 5px;
+    cursor: pointer; /* Make the container clickable */
+}
+
+.movie-container img {
+    max-width: 100%;
+    max-height: 65%;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.movie-rating {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1.2em;
+}
+
+.btn-watchlist {
+    background-color: #1a73e8;
+    color: #fff;
+    border: none;
+    margin-top: auto;
+}
+
+.btn-watchlist:hover {
+    background-color: #155ab6;
+}
+
+.card-title {
+    font-size: 1.1em;
+    margin: 10px 0;
+}
+
+.carousel-control-prev, .carousel-control-next {
+    z-index: 1;
+}
+
+.carousel-inner{
+    padding-left: 13%;
+}
+
+.card-text {
+    font-size: 1em;
+    margin-bottom: 5px;
+}

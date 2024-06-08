@@ -1,0 +1,61 @@
+.form-box {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+.form-box h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.input-box {
+    position: relative;
+    margin-bottom: 30px;
+}
+.input-box input,
+.input-box select {
+    width: 100%;
+    padding: 10px;
+    padding-left: 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.input-box label {
+    position: absolute;
+    left: 40px;
+    top: 10px;
+    pointer-events: none;
+    transition: 0.5s;
+}
+.input-box input:focus ~ label,
+.input-box input:valid ~ label,
+.input-box select:focus ~ label,
+.input-box select:valid ~ label {
+    top: -15px;
+    left: 30px;
+    color: #007bff;
+    font-size: 12px;
+}
+.input-box .icon {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+.btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: #007bff;
+    color: #fff;
+    font-size: 16px;
+}
+.login-register {
+    text-align: center;
+}
+.login-register a {
+    color: #007bff;
+    text-decoration: none;
+}

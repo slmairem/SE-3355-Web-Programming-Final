@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Search</title>
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">   
+</head>
+<body style="background-color: black;">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #121212;">
+    <a class="navbar-brand" href="/">
+        <img src="/images/logo.jpeg" height="50">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+        <form class="d-flex mx-auto position-relative" style="width: 700px;" action="/search" method="POST">
+            <div class="input-group" style="width: 100%;">
+                <div class="input-group-prepend">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="searchDropdown">All</button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" onclick="changeSearchCategory('All')">All</a>
+                        <a class="dropdown-item" href="#" onclick="changeSearchCategory('Celebs')">Celebs</a>
+                        <a class="dropdown-item" href="#" onclick="changeSearchCategory('Titles')">Titles</a>
+                        <a class="dropdown-item" href="#" onclick="changeSearchCategory('Summaries')">Summaries</a>
+                    </div>
+                </div>
+                <input type="text" class="form-control" name="query" id="searchInput" placeholder="Search" aria-label="Search" aria-describedby="searchDropdown">
+            </div>
+            <!-- Suggestions list -->
+            <ul id="suggestions" class="list-group position-absolute w-100" style="display: none;"></ul>
+        </form>
+
+        <div class="d-flex align-items-center">
+            <button class="btn" style="background-color: #121212; color: #ffffff; border: none;">Watchlist</button>
+        </div>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Language
+                </a>
+                <div class="dropdown-menu" aria-labelledby="languageDropdown">
+                    <a class="dropdown-item" href="#" onclick="changeLanguage('en')">English</a>
+                    <a class="dropdown-item" href="#" onclick="changeLanguage('tr')">Turkish</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function changeSearchCategory(category) {
+        document.getElementById('searchDropdown').innerText = category;
+    }
+
+    function changeLanguage(language) {
+        document.cookie = `language=${language}; path=/`;
+        location.reload();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', function() {
+        var query = this.value;
+        if (query.length >= 3) {
+            fetchSuggestions(query);
+        } else {
+            document.getElementById('suggestions').style.display = 'none'; // Hide suggestions if query length is less than 3
+        }
+    });
+
+    function fetchSuggestions(query) {
+        fetch(`/autocomplete?query=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                var suggestionsList = document.getElementById('suggestions');
+                suggestionsList.innerHTML = '';
+
+                // Separate movie and person suggestions
+                const movies = data.filter(suggestion => suggestion.category === 'Movie');
+                const people = data.filter(suggestion => suggestion.category === 'Person');
+
+                if (movies.length > 0) {
+                    var moviesHeader = document.createElement('li');
+                    moviesHeader.className = 'list-group-item suggestions-header';
+                    moviesHeader.innerText = 'Movies';
+                    suggestionsList.appendChild(moviesHeader);
+
+                    movies.forEach(function(suggestion) {
+                        var suggestionItem = document.createElement('li');
+                        suggestionItem.className = 'list-group-item suggestion-item';
+                        suggestionItem.innerHTML = `
+                            <a style="display: flex;">
+                                <img src="${suggestion.image}" alt="${suggestion.name}" style="width: 50px; height: auto; margin-right: 10px;">
+                                <div>
+                                    <h6>${suggestion.name}</h6>
+                                    <p>${suggestion.year}</p>
+                                </div>
+                            </a>`;
+                        suggestionItem.addEventListener('click', function() {
+                            window.location.href = suggestion.url;
+                        });
+                        suggestionsList.appendChild(suggestionItem);
+                    });
+                }
+
+                if (people.length > 0) {
+                    var peopleHeader = document.createElement('li');
+                    peopleHeader.className = 'list-group-item suggestions-header';
+                    peopleHeader.innerText = 'Persons';
+                    suggestionsList.appendChild(peopleHeader);
+
+                    people.forEach(function(suggestion) {
+                        var suggestionItem = document.createElement('li');
+                        suggestionItem.className = 'list-group-item suggestion-item';
+                        suggestionItem.innerHTML = `
+                            <a style="display: flex;">
+                                <img src="${suggestion.image}" alt="${suggestion.name}" style="width: 50px; height: auto; margin-right: 10px;">
+                                <div>
+                                    <h6>${suggestion.name}</h6>
+                                    <p>${suggestion.title}</p>
+                                </div>
+                            </a>`;
+                        suggestionItem.addEventListener('click', function() {
+                            window.location.href = suggestion.url;
+                        });
+                        suggestionsList.appendChild(suggestionItem);
+                    });
+                }
+
+                suggestionsList.style.display = 'block'; // Show suggestions
+            })
+            .catch(error => console.error('Error fetching suggestions:', error));
+    }
+</script>
+
+</body>
+</html>

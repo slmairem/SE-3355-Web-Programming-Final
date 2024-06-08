@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+    <title><%= movie.name %> - Movie Details</title>
+    <style>
+        .card-title {
+            font-size: 2rem;
+        }
+        .rating-section, .popularity-section {
+            margin-bottom: 0.5rem;
+        }
+        .movie-img {
+            max-height: 500px;
+            object-fit: cover;
+        }
+        .description-section {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/nav') %>
+
+    <div class="container mt-3">
+        <div class="row">
+            <!-- Üstteki Parça -->
+            <div class="col-12">
+                <div class="card mb-3" style="background-color: transparent;">
+                    <div class="card-body">
+                        <div class="row" style="color: aliceblue;">
+                            <div class="col-md-6">
+                                <h5 class="card-title"><%= movie.name %></h5>
+                                <p class="card-text"><span><%= movie.year %></span> | <span><%= movie.duration %></span></p>
+                            </div>
+                            <div class="col-md-3" >
+                                <h2 class="card-title" style="font-size: 20px;">IMDb Rating:</h2>
+                                <p class="card-text"><span>🌟 <%= movie.rate %>/10</span></p>
+                            </div>
+                            <div class="col-md-3">
+                                <h2 class="card-title" style="font-size: 20px;">Popularity:</h2>
+                                <p class="card-text"><span><%= movie.popularity_rank %></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orta Parça -->
+            <div class="col-12">
+                <div class="card mb-3">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="/images/<%= movie.imgurl %>" alt="<%= movie.name %>" class="img-fluid movie-img">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <div class="video-section">
+                                    <video controls>
+                                        <source src="/videos/<%= movie.clipurl %>" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alt Parça -->
+            <div class="col-12">
+                <div class="card mb-3" style="background-color: transparent;">
+                    <div class="card-body">
+                        <div class="description-section">
+                            <p class="card-text" style="color: aliceblue;"><%= movie.description %></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

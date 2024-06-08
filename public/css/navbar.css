@@ -1,0 +1,46 @@
+#suggestions {
+    position: absolute;
+    z-index: 1000;
+    width: 100%; /* Full width of the form-control */
+    background-color: white;
+    border: 1px solid #ced4da;
+    border-top: 0; /* Remove top border to merge with search input */
+    border-radius: 0 0 0.25rem 0.25rem; /* Adjust border radius */
+    max-height: 200px;
+    overflow-y: auto;
+    left: 0; /* Position from the left */
+    margin-top: 38px; /* Add more margin to move the suggestions down */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for better visibility */
+}
+.suggestion-item {
+    padding: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.suggestion-item img {
+    width: 50px;
+    height: auto;
+    margin-right: 10px;
+}
+.suggestion-item div {
+    display: flex;
+    flex-direction: column;
+}
+.suggestion-item h6 {
+    margin: 0;
+    font-size: 1rem;
+}
+.suggestion-item p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+.suggestion-item:hover {
+    background-color: #f8f9fa;
+}
+.suggestions-header {
+    background-color: #f8f9fa;
+    padding: 0.5rem;
+    font-weight: bold;
+}

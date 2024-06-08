@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <style>
+        .result-container {
+            display: flex;
+            margin-bottom: 20px;
+            height: 150px; /* img konteynırının yüksekliğine eşit */
+        }
+
+        .result-container img {
+            max-width: 150px;
+            max-height: 150px;
+            flex-shrink: 0;
+        }
+        
+    </style>
+</head>
+<body>
+    <%- include('partials/nav') %>
+    
+    <div class="container mt-5">
+        <h1 style="color: aliceblue;">Search Results</h1>
+        <div class="list-group">
+            <% if (results.length > 0) { %>
+
+                <div id="movies">
+                    <h2 style="color: aliceblue;">Films</h2>
+                    <% results.forEach(result => { %>
+                        <% if (result.type === 'movies') { %>
+                            <div class="result-container">
+                                <img src="/images/<%= result.imgurl %>" alt="<%= result.name %>" class="img-fluid">
+                                
+                                    <a href="/moviedetail/<%= result.id %>" class="list-group-item list-group-item-action">
+                                        <h5 class="mb-1"><%= result.name %></h5>
+                                        <p class="mb-1"><%= result.year %> ▴ 🌟 <%= result.rate %> / 10</p>
+                                        <p class="mb-1"><%= result.description %></p>
+                                    </a>
+                                
+                            </div>
+                        <% } %>
+                    <% }) %>
+                </div>
+
+                <div id="people">
+                    <h2 style="color: aliceblue;">People</h2>
+                    <% results.forEach(result => { %>
+                        <% if (result.type === 'people') { %>
+                            <div class="result-container">
+                                <img src="/images/<%= result.imgurl %>" alt="<%= result.name %>" class="img-fluid">
+                                
+                                    <a href="/people/<%= result.id %>" class="list-group-item list-group-item-action">
+                                        <h5 class="mb-1"><%= result.name %> </h5>
+                                        <p class="mb-1">(<%= result.title %>)</p>
+                                    </a>
+                                
+                            </div>
+                        <% } %>
+                    <% }) %>
+                </div>
+
+            <% } else { %>
+                <p>No results found</p>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>
