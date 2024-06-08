@@ -10,9 +10,17 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.movie-container').forEach(container => {
-                container.addEventListener('click', function() {
-                    window.location.href = container.dataset.href;
+                container.addEventListener('click', function(event) {
+                    if (!event.target.classList.contains('btn-trailer')) {
+                        window.location.href = container.dataset.href;
+                    }
                 });
+            });
+
+            $('#trailerModal').on('hidden.bs.modal', function () {
+                var $video = $(this).find('video');
+                $video.get(0).pause();
+                $video.get(0).currentTime = 0;
             });
         });
     </script>
@@ -39,6 +47,9 @@
                                         <h3 class="card-title"><%= movie.name %></h3>
                                         <div><h3 class="card-text">🌟 <%= movie.rate %> / 10</h3></div>
                                         <div><button class="btn btn-primary btn-watchlist">Watchlist</button></div>
+                                        <div>
+                                            <button class="btn btn-secondary btn-trailer" data-toggle="modal" data-target="#trailerModal" data-clipurl="/videos/<%= movie.clipurl %>">Trailer</button>
+                                        </div>
                                     </div>
                                 </div>
                             <% } %>
@@ -57,6 +68,9 @@
                                             <h3 class="card-title"><%= movie.name %></h3>
                                             <div><h3 class="card-text">🌟 <%= movie.rate %> / 10</h3></div>
                                             <div><button class="btn btn-primary btn-watchlist">Watchlist</button></div>
+                                            <div>
+                                                <button class="btn btn-secondary btn-trailer" data-toggle="modal" data-target="#trailerModal" data-clipurl="/videos/<%= movie.clipurl %>">Trailer</button>
+                                            </div>
                                     </div>
                                 </div>
                             <% }) %>
@@ -74,6 +88,46 @@
             </a>
         </div>
     </div>
-      
+
+    <!-- Modal -->
+    <div class="modal fade" id="trailerModal" tabindex="-1" role="dialog" aria-labelledby="trailerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="trailerModalLabel">Trailer</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <video class="embed-responsive-item" controls>
+                            <source src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <script>
+        $('#trailerModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var clipUrl = button.data('clipurl'); // Extract info from data-* attributes
+            var modal = $(this);
+            modal.find('.modal-body video source').attr('src', clipUrl);
+            modal.find('.modal-body video').get(0).load();
+        });
+
+        $('#trailerModal').on('hidden.bs.modal', function (event) {
+            var modal = $(this);
+            modal.find('.modal-body video').get(0).pause();
+            modal.find('.modal-body video source').attr('src', '');
+        });
+
+        
+    </script>
 </body>
 </html>

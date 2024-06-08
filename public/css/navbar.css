@@ -1,6 +1,7 @@
+/* navbar.css */
 #suggestions {
     position: absolute;
-    z-index: 1000;
+    z-index: 1030;
     width: 100%; /* Full width of the form-control */
     background-color: white;
     border: 1px solid #ced4da;
@@ -43,4 +44,26 @@
     background-color: #f8f9fa;
     padding: 0.5rem;
     font-weight: bold;
+}
+
+/* Navbar Styles */
+.navbar {
+    z-index: 1050; /* Ensure navbar is on top */
+}
+
+.dropdown-menu {
+    z-index: 1060; /* Ensure dropdown is above the navbar */
+}
+
+.dropdown-toggle::after {
+    margin-left: 0.255em;
+}
+
+.position-relative {
+    position: relative;
+    z-index: 1040; /* Ensure search suggestions are below dropdowns */
+}
+
+#suggestions {
+    z-index: 1030; /* Ensure suggestions are below everything else */
 }

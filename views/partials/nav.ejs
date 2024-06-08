@@ -24,7 +24,6 @@
                         <a class="dropdown-item" href="#" onclick="changeSearchCategory('All')">All</a>
                         <a class="dropdown-item" href="#" onclick="changeSearchCategory('Celebs')">Celebs</a>
                         <a class="dropdown-item" href="#" onclick="changeSearchCategory('Titles')">Titles</a>
-                        <a class="dropdown-item" href="#" onclick="changeSearchCategory('Summaries')">Summaries</a>
                     </div>
                 </div>
                 <input type="text" class="form-control" name="query" id="searchInput" placeholder="Search" aria-label="Search" aria-describedby="searchDropdown">
@@ -56,7 +55,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
+    var searchCategory = 'All';
+
     function changeSearchCategory(category) {
+        searchCategory = category;
         document.getElementById('searchDropdown').innerText = category;
     }
 
@@ -75,15 +77,25 @@
     });
 
     function fetchSuggestions(query) {
-        fetch(`/autocomplete?query=${query}`)
+        fetch(`/autocomplete?query=${query}&category=${searchCategory}`)
             .then(response => response.json())
             .then(data => {
                 var suggestionsList = document.getElementById('suggestions');
                 suggestionsList.innerHTML = '';
 
+                // Filter suggestions based on selected category
+                let suggestions = [];
+                if (searchCategory === 'All') {
+                    suggestions = data;
+                } else if (searchCategory === 'Celebs') {
+                    suggestions = data.filter(suggestion => suggestion.category === 'Person');
+                } else if (searchCategory === 'Titles') {
+                    suggestions = data.filter(suggestion => suggestion.category === 'Movie');
+                }
+
                 // Separate movie and person suggestions
-                const movies = data.filter(suggestion => suggestion.category === 'Movie');
-                const people = data.filter(suggestion => suggestion.category === 'Person');
+                const movies = suggestions.filter(suggestion => suggestion.category === 'Movie');
+                const people = suggestions.filter(suggestion => suggestion.category === 'Person');
 
                 if (movies.length > 0) {
                     var moviesHeader = document.createElement('li');
