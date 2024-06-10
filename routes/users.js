@@ -24,12 +24,17 @@ router.get('/auth/google/callback',
     (req, res) => {
         const user = req.user;
         if (user && user.displayName) {
-            req.session.regName = user.displayName;
+            req.session.loggedInUser = {
+                name: user.displayName.split(' ')[0],
+                surname: user.displayName.split(' ')[1] || '',
+                email: user.email
+            };
         }
         const redirectTo = req.session.redirectTo || '/';
         delete req.session.redirectTo;
         res.redirect(redirectTo);
 });
+
 
 router.get('/check-session', (req, res) => {
     if (req.session && req.session.loggedInUser) {
@@ -202,6 +207,7 @@ router.get("/", async function(req, res) {
         res.render("index", {
             movies: movies,
             language: language,
+            user: req.session.loggedInUser
         });
     } catch (err) {
         console.log(err);

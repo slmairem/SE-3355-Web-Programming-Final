@@ -7,6 +7,18 @@ passport.use(new GoogleStrategy({
     callbackURL: "/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, cb) {
-    return cb(null, profile);
+    // Save user information to session
+    return cb(null, {
+      displayName: profile.displayName,
+      email: profile.emails[0].value
+    });
   }
 ));
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+    done(null, obj);
+});

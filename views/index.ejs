@@ -16,14 +16,14 @@
                     }
                 });
             });
-
+    
             document.querySelectorAll('.btn-watchlist').forEach(button => {
                 button.addEventListener('click', async function(event) {
                     event.stopPropagation();
                     const movieId = this.closest('.movie-container').dataset.href.split('/').pop();
                     const response = await fetch('/check-session');
                     const result = await response.json();
-
+    
                     if (result.isLoggedIn) {
                         // Logic to add to watchlist
                         // For demonstration, we're just showing an alert
@@ -33,13 +33,13 @@
                     }
                 });
             });
-
+    
             $('#trailerModal').on('hidden.bs.modal', function () {
                 var $video = $(this).find('video');
                 $video.get(0).pause();
                 $video.get(0).currentTime = 0;
             });
-
+    
             $('#trailerModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
                 var clipUrl = button.data('clipurl'); // Extract info from data-* attributes
@@ -47,7 +47,7 @@
                 modal.find('.modal-body video source').attr('src', clipUrl);
                 modal.find('.modal-body video').get(0).load();
             });
-
+    
             $('#trailerModal').on('hidden.bs.modal', function (event) {
                 var modal = $(this);
                 modal.find('.modal-body video').get(0).pause();
