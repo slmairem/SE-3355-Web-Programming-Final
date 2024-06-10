@@ -11,8 +11,25 @@
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll('.movie-container').forEach(container => {
                 container.addEventListener('click', function(event) {
-                    if (!event.target.classList.contains('btn-trailer')) {
+                    if (!event.target.classList.contains('btn-trailer') && !event.target.classList.contains('btn-watchlist')) {
                         window.location.href = container.dataset.href;
+                    }
+                });
+            });
+
+            document.querySelectorAll('.btn-watchlist').forEach(button => {
+                button.addEventListener('click', async function(event) {
+                    event.stopPropagation();
+                    const movieId = this.closest('.movie-container').dataset.href.split('/').pop();
+                    const response = await fetch('/check-session');
+                    const result = await response.json();
+
+                    if (result.isLoggedIn) {
+                        // Logic to add to watchlist
+                        // For demonstration, we're just showing an alert
+                        alert('Added to Watchlist');
+                    } else {
+                        window.location.href = '/login';
                     }
                 });
             });
@@ -21,6 +38,20 @@
                 var $video = $(this).find('video');
                 $video.get(0).pause();
                 $video.get(0).currentTime = 0;
+            });
+
+            $('#trailerModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var clipUrl = button.data('clipurl'); // Extract info from data-* attributes
+                var modal = $(this);
+                modal.find('.modal-body video source').attr('src', clipUrl);
+                modal.find('.modal-body video').get(0).load();
+            });
+
+            $('#trailerModal').on('hidden.bs.modal', function (event) {
+                var modal = $(this);
+                modal.find('.modal-body video').get(0).pause();
+                modal.find('.modal-body video source').attr('src', '');
             });
         });
     </script>
@@ -111,23 +142,5 @@
         </div>
     </div>
 
-    
-    <script>
-        $('#trailerModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var clipUrl = button.data('clipurl'); // Extract info from data-* attributes
-            var modal = $(this);
-            modal.find('.modal-body video source').attr('src', clipUrl);
-            modal.find('.modal-body video').get(0).load();
-        });
-
-        $('#trailerModal').on('hidden.bs.modal', function (event) {
-            var modal = $(this);
-            modal.find('.modal-body video').get(0).pause();
-            modal.find('.modal-body video source').attr('src', '');
-        });
-
-        
-    </script>
 </body>
 </html>
