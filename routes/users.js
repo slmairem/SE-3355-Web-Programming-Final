@@ -123,6 +123,41 @@ router.post("/login", async (req, res) => {
     }
 });
 
+router.post("/search", async function(req, res) {
+    const query = req.body.query || "";
+    const category = req.body.category || "All";
+
+    try {
+        let results = [];
+
+        if (category === "Titles") {
+            const [movies] = await db.execute("SELECT id, name, year, rate, description, imgurl FROM movies WHERE name LIKE ?", [`%${query}%`]);
+            results = movies.map(movie => ({ ...movie, type: 'movies' }));
+        } else if (category === "Celebs") {
+            const [people] = await db.execute("SELECT id, name, title, imgurl FROM people WHERE name LIKE ? OR title LIKE ?", [`%${query}%`, `%${query}%`]);
+            results = people.map(person => ({ ...person, type: 'people' }));
+        } else if (category === "Summaries") {
+            const [movies] = await db.execute("SELECT id, name, year, rate, description, imgurl FROM movies WHERE description LIKE ?", [`%${query}%`]);
+            results = movies.map(movie => ({ ...movie, type: 'movies' }));
+        } else if (category === "All") {
+            const [movies] = await db.execute("SELECT id, name, year, rate, description, imgurl FROM movies WHERE name LIKE ?", [`%${query}%`]);
+            const [people] = await db.execute("SELECT id, name, title, imgurl FROM people WHERE name LIKE ? OR title LIKE ?", [`%${query}%`, `%${query}%`]);
+
+            results = [
+                ...movies.map(movie => ({ ...movie, type: 'movies' })),
+                ...people.map(person => ({ ...person, type: 'people' }))
+            ];
+        }
+
+        res.render("searchresults", {
+            results: results,
+            category: category
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Internal Server Error");
+    }
+});
 
 router.get("/autocomplete", async function(req, res) {
     const query = req.query.query || "";
