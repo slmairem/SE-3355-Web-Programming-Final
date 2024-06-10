@@ -20,10 +20,34 @@ router.get('/auth/google',
 passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/auth/google/callback', 
-passport.authenticate('google', { failureRedirect: '/login' }),
-(req, res) => {
-    res.redirect('/');
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    (req, res) => {
+        const user = req.user;
+        if (user && user.displayName) {
+            req.session.regName = user.displayName;
+        }
+        const redirectTo = req.session.redirectTo || '/';
+        delete req.session.redirectTo;
+        res.redirect(redirectTo);
 });
+
+router.get('/check-session', (req, res) => {
+    if (req.session && req.session.loggedInUser) {
+        const { name, surname } = req.session.loggedInUser;
+        res.json({
+            isLoggedIn: true,
+            user: {
+                name: name,
+                surname: surname
+            }
+        });
+    } else {
+        res.json({
+            isLoggedIn: false
+        });
+    }
+});
+
 
 router.get("/moviedetail/:id", async function(req, res) {
     try {
@@ -47,6 +71,7 @@ router.get("/moviedetail/:id", async function(req, res) {
 router.get("/login", function(req, res) {
     res.render("login");
 });
+
 
 router.get("/register", function(req, res) {
     res.render("register");
@@ -80,7 +105,11 @@ router.post("/login", async (req, res) => {
             const isMatch = await bcrypt.compare(password, user.password);
 
             if (isMatch) {
-                req.session.loggedInUser = user;
+                req.session.loggedInUser = {
+                    name: user.name,
+                    surname: user.surname,
+                    email: user.email
+                };
                 res.redirect("/");
             } else {
                 res.status(401).send("Email or Password didn't match.");
@@ -93,6 +122,7 @@ router.post("/login", async (req, res) => {
         res.status(500).send("Server Error");
     }
 });
+
 
 router.get("/autocomplete", async function(req, res) {
     const query = req.query.query || "";
@@ -142,5 +172,6 @@ router.get("/", async function(req, res) {
         res.status(500).send("Server error");
     }
 });
+
 
 module.exports = router;

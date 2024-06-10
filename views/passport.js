@@ -7,7 +7,6 @@ passport.use(new GoogleStrategy({
     callbackURL: "/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, cb) {
-    // Kullanıcıyı veritabanında arayabilir veya kaydedebilirsiniz
     return cb(null, profile);
   }
 ));

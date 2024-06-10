@@ -30,6 +30,7 @@ app.use(userRoutes);
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 //passport
 passport.use(new GoogleStrategy({
     clientID: "899102746902-2dncmirk0dbcp0cnuocmvpdbic28krus.apps.googleusercontent.com",
