@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const flash = require("connect-flash");
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const passport = require('passport');
 
 const app = express();
 const userRoutes = require("./routes/users");
@@ -21,13 +23,37 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
-app.use(flash());
 
+app.use(flash());
 app.use(userRoutes);
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+//passport
+passport.use(new GoogleStrategy({
+    clientID: "899102746902-2dncmirk0dbcp0cnuocmvpdbic28krus.apps.googleusercontent.com",
+    clientSecret: "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",
+    callbackURL: "http://localhost:3000/auth/google/callback"
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    return cb(null, profile);
+  }
+));
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
+//Start server
 app.listen(3000, () => {
     console.log("listening on port 3000");
 });
+
 
 
 // Routes
@@ -126,7 +152,6 @@ app.get("/search", async function(req, res) {
         res.status(500).send("Internal Server Error");
     }
 });*/
-
 
 
 

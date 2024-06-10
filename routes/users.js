@@ -4,6 +4,7 @@ const db = require("../data/db");
 const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const passport = require('passport');
 
 router.use(cookieParser());
 router.use(session({
@@ -14,6 +15,15 @@ router.use(session({
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
+
+router.get('/auth/google',
+passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get('/auth/google/callback', 
+passport.authenticate('google', { failureRedirect: '/login' }),
+(req, res) => {
+    res.redirect('/');
+});
 
 router.get("/moviedetail/:id", async function(req, res) {
     try {
