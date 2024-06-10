@@ -4,7 +4,7 @@
 
 This project is a responsive website that offers various features such as searching, user authentication (login/register and Google authentication), adding movies to a watchlist, viewing movie details, and watching trailers.
 
-You can watch a video demonstration of the website [here](https://youtu.be/av4KVC798Xg?si=zqxWFNQmSOJo-qYl).
+You can watch a video demonstration of the website [here](https://youtu.be/CtEgFNBhBas).
 
 I have 3 deployment issues, I add them under the read.me file.
 
