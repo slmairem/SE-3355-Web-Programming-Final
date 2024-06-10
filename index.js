@@ -1,9 +1,10 @@
 const express = require("express");
-// const session = require("express-session");
 const bodyParser = require("body-parser");
 const flash = require("connect-flash");
-const app = express();
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
+const app = express();
 const userRoutes = require("./routes/users");
 
 app.set("view engine", "ejs");
@@ -14,14 +15,20 @@ app.use(express.static('node_modules'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(cookieParser());
+app.use(session({
+    secret: 'your_secret_key',
+    resave: false,
+    saveUninitialized: true
+}));
 app.use(flash());
 
 app.use(userRoutes);
 
-
 app.listen(3000, () => {
     console.log("listening on port 3000");
 });
+
 
 // Routes
 

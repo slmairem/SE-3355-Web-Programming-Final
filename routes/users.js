@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../data/db");
-const bcrypt = require('bcryptjs'); // For hashing passwords
+const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
@@ -15,7 +15,7 @@ router.use(session({
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
-router.use("/moviedetail/:id", async function(req, res) {
+router.get("/moviedetail/:id", async function(req, res) {
     try {
         const [movies] = await db.execute("SELECT *, (SELECT COUNT(*) FROM movies AS m WHERE m.rate * m.ratenum > movies.rate * movies.ratenum) + 1 AS popularity_rank FROM movies ORDER BY rate * ratenum DESC");
         if (movies.length > 0) {
@@ -34,40 +34,28 @@ router.use("/moviedetail/:id", async function(req, res) {
     }
 });
 
-router.use("/login", function(req, res){
+router.get("/login", function(req, res) {
     res.render("login");
 });
 
-router.use("/register", function(req, res){
+router.get("/register", function(req, res) {
     res.render("register");
 });
 
 router.post('/register', async (req, res) => {
     const { name, surname, email, password, country, city } = req.body;
-    console.log("Received form data:", req.body);
 
     try {
-        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = {
+            name, surname, email, password: hashedPassword, country, city
+        };
 
-        // Create a user object
-        const user = { name, surname, email, password: hashedPassword, country, city };
-
-        // Insert the user into the database
-        const [result] = await db.query('INSERT INTO users SET ?', user);
-        console.log('Register Applied', result);
-
-        req.flash('success_msg', 'You are now registered and can log in');
+        await db.query('INSERT INTO users SET ?', newUser);
         res.redirect('/login');
     } catch (err) {
         console.error('Register Error', err);
-
-        if (err.code === 'ER_DUP_ENTRY') {
-            req.flash('error_msg', 'Email already exists');
-            res.redirect('/register');
-        } else {
-            res.status(500).json({ error: 'Register Error' });
-        }
+        res.status(500).json({ error: 'Register Error' });
     }
 });
 
@@ -79,8 +67,6 @@ router.post("/login", async (req, res) => {
 
         if (users.length > 0) {
             const user = users[0];
-
-            // Compare the hashed password
             const isMatch = await bcrypt.compare(password, user.password);
 
             if (isMatch) {
@@ -95,42 +81,6 @@ router.post("/login", async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send("Server Error");
-    }
-});
-
-router.post("/search", async function(req, res) {
-    const query = req.body.query || "";
-    const category = req.body.category || "All";
-
-    try {
-        let results = [];
-
-        if (category === "Titles") {
-            const [movies] = await db.execute("SELECT id, name, year, rate, description, imgurl FROM movies WHERE name LIKE ?", [`%${query}%`]);
-            results = movies.map(movie => ({ ...movie, type: 'movies' }));
-        } else if (category === "Celebs") {
-            const [people] = await db.execute("SELECT id, name, title, imgurl FROM people WHERE name LIKE ? OR title LIKE ?", [`%${query}%`, `%${query}%`]);
-            results = people.map(person => ({ ...person, type: 'people' }));
-        } else if (category === "Summaries") {
-            const [movies] = await db.execute("SELECT id, name, year, rate, description, imgurl FROM movies WHERE description LIKE ?", [`%${query}%`]);
-            results = movies.map(movie => ({ ...movie, type: 'movies' }));
-        } else if (category === "All") {
-            const [movies] = await db.execute("SELECT id, name, year, rate, description, imgurl FROM movies WHERE name LIKE ?", [`%${query}%`]);
-            const [people] = await db.execute("SELECT id, name, title, imgurl FROM people WHERE name LIKE ? OR title LIKE ?", [`%${query}%`, `%${query}%`]);
-
-            results = [
-                ...movies.map(movie => ({ ...movie, type: 'movies' })),
-                ...people.map(person => ({ ...person, type: 'people' }))
-            ];
-        }
-
-        res.render("searchresults", {
-            results: results,
-            category: category
-        });
-    } catch (err) {
-        console.log(err);
-        res.status(500).send("Internal Server Error");
     }
 });
 
@@ -167,12 +117,11 @@ router.get("/autocomplete", async function(req, res) {
     }
 });
 
-router.use("/", async function(req, res) {
+router.get("/", async function(req, res) {
     try {
         const [movies] = await db.execute("SELECT *, rate * ratenum AS popularity FROM movies ORDER BY popularity DESC LIMIT 10");
 
-        // Read language preference from cookies
-        const language = req.cookies.language || 'en';  // Default to 'en' if no language cookie is set
+        const language = req.cookies.language || 'en';
 
         res.render("index", {
             movies: movies,
