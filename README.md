@@ -6,7 +6,7 @@ This project is a responsive website that offers various features such as search
 
 You can watch a video demonstration of the website [here](https://youtu.be/CtEgFNBhBas).
 
-I have 3 deployment issues, I add them under the read.me file.
+I have 4 deployment errors, I add them under the read.me file.
 
 You can see images in read.me's end. I screenshotted them into a different monitor to prove the website is responsive.
 
@@ -36,7 +36,8 @@ The backend of the project is built using Node.js and MySQL. This project marks 
 ## Images
 
 ### Deployement Errors
-<img src="https://github.com/slmairem/SE-3355-Web-Programming-Midterm/assets/129744557/5ce15ff9-ccd0-44ef-9990-5214c61951bb" alt="deployerr1" width="500"> <br>
+<img src="https://github.com/slmairem/SE-3355-Web-Programming-Midterm/assets/129744557/5ce15ff9-ccd0-44ef-9990-5214c61951bb" alt="deployerr1" width="500"> 
+<img src="https://github.com/slmairem/SE-3355-Web-Programming-Midterm/assets/129744557/1cbb6500-643f-49b5-a61f-cca7d14ecf32" alt="Screenshot 2024-06-10 214101" width="500"> <br>
 <img src="https://github.com/slmairem/SE-3355-Web-Programming-Midterm/assets/129744557/ebf1e297-3f2a-4af9-9b0b-7d4f2b43eb58" alt="deployerr2" width="500">
 <img src="https://github.com/slmairem/SE-3355-Web-Programming-Midterm/assets/129744557/6ddb6e3a-d566-4bb8-85de-51c0c177ab85" alt="deployerr3" width="500">
 
