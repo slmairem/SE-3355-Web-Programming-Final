@@ -27,10 +27,11 @@
                     </div>
                 </div>
                 <input type="text" class="form-control" name="query" id="searchInput" placeholder="Search" aria-label="Search" aria-describedby="searchDropdown">
+                <input type="hidden" name="category" id="searchCategory" value="All">
             </div>
-            <!-- Suggestions list -->
             <ul id="suggestions" class="list-group position-absolute w-100" style="display: none;"></ul>
         </form>
+        
 
         <div class="d-flex align-items-center">
             <button class="btn" style="background-color: #121212; color: #ffffff; border: none;">Watchlist</button>
@@ -59,9 +60,11 @@
     var searchCategory = 'All';
 
     function changeSearchCategory(category) {
-        searchCategory = category;
-        document.getElementById('searchDropdown').innerText = category;
-    }
+    searchCategory = category;
+    document.getElementById('searchDropdown').innerText = category;
+    document.getElementById('searchCategory').value = category;
+}
+
 
     function changeLanguage(language) {
         document.cookie = `language=${language}; path=/`;

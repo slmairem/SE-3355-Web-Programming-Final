@@ -159,6 +159,7 @@ router.post("/search", async function(req, res) {
     }
 });
 
+
 router.get("/autocomplete", async function(req, res) {
     const query = req.query.query || "";
     if (query.length < 3) {
